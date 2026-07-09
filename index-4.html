@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#2c1250">
+<title>BS Açaiteria — Gestão</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍇</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="app">
+
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="topbar">
+    <div class="logo">
+      <div class="logo-badge">BS<span>AÇAITERIA</span></div>
+    </div>
+    <nav class="tabs" id="mainTabs">
+      <button class="tab-btn active" data-tab="entrada">Entrada De produtos</button>
+      <button class="tab-btn" data-tab="venda">Venda</button>
+      <button class="tab-btn" data-tab="estoque">Estoque</button>
+      <button class="tab-btn" data-tab="financeiro">Financeiro</button>
+    </nav>
+  </header>
+
+  <!-- ===== TELA 1: ENTRADA DE PRODUTOS + CRIAÇÃO ===== -->
+  <section class="screen active" id="screen-entrada">
+    <div class="grid-3">
+
+      <!-- Coluna 1: Formulário de entrada -->
+      <div class="card">
+        <div class="field-row">
+          <input type="text" id="ent-nome" placeholder="Nome do produto" class="pill-input">
+          <input type="text" id="ent-marca" placeholder="Marca" class="pill-input">
+        </div>
+        <div class="cup-visual"><div class="cup"><div class="cup-liquid"></div></div></div>
+        <div class="field-stack">
+          <input type="number" step="0.01" id="ent-valor" placeholder="Valor de compra (R$)" class="pill-input">
+          <div class="field-row">
+            <select id="ent-unidade" class="pill-input">
+              <option value="L">Litros (L)</option>
+              <option value="Kg">Quilos (Kg)</option>
+              <option value="Un">Unidade (Un)</option>
+              <option value="g">Gramas (g)</option>
+              <option value="ml">Mililitros (ml)</option>
+            </select>
+            <input type="number" step="0.01" id="ent-qtd" placeholder="Quantidade" class="pill-input">
+          </div>
+          <input type="text" id="ent-tipo" placeholder="Tipo (ex: Matéria-prima, Condimento, Unidade)" class="pill-input">
+          <input type="text" id="ent-fornecedor" placeholder="Contato do fornecedor" class="pill-input">
+        </div>
+        <button class="btn-confirm" id="ent-add">✅ Adicionar</button>
+      </div>
+
+      <!-- Coluna 2: Lista de entrada -->
+      <div class="card">
+        <h2 class="card-title">Lista de entrada</h2>
+        <div class="search-row">
+          <input type="text" id="ent-search" placeholder="Pesquisar..." class="pill-input small">
+        </div>
+        <div class="scroll-list" id="ent-list"></div>
+      </div>
+
+      <!-- Coluna 3: Criação de produto -->
+      <div class="card card-dark">
+        <h2 class="card-title">Criação de produto</h2>
+        <div class="field-stack">
+          <input type="text" id="cri-nome" placeholder="Nome do produto (ex: Açaí Especial)" class="pill-input">
+          <div class="field-row">
+            <input type="number" step="0.01" id="cri-preco" placeholder="Preço de venda (R$)" class="pill-input">
+            <select id="cri-tamanho" class="pill-input">
+              <option value="300ml">300 ml</option>
+              <option value="500ml">500 ml</option>
+              <option value="750ml">750 ml</option>
+              <option value="Outro">Outro / Un</option>
+            </select>
+          </div>
+        </div>
+        <div class="recipe-builder">
+          <div class="field-row">
+            <select id="cri-ingrediente" class="pill-input"></select>
+            <input type="number" step="0.01" id="cri-ing-qtd" placeholder="Qtd" class="pill-input tiny">
+            <button class="btn-round" id="cri-ing-add">+</button>
+          </div>
+          <div class="recipe-list" id="cri-recipe-list"></div>
+        </div>
+        <div class="cost-summary" id="cri-cost-summary">
+          <div><span>Custo</span><b id="cri-custo">R$ 0,00</b></div>
+          <div><span>Lucro</span><b id="cri-lucro">R$ 0,00</b></div>
+          <div><span>Margem</span><b id="cri-margem">0%</b></div>
+        </div>
+        <div class="btn-pair">
+          <button class="btn-gray" id="cri-del">Del</button>
+          <button class="btn-confirm-green" id="cri-add">Finalizar</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== TELA 2: VENDA (PDV) ===== -->
+  <section class="screen" id="screen-venda">
+    <div class="grid-3 pdv-grid">
+
+      <!-- Coluna 1: Produtos criados + extras -->
+      <div class="card">
+        <h2 class="card-title">Produto</h2>
+        <div class="chip-row" id="pdv-cat-toggle">
+          <button class="chip active" data-cat="produtos">Produtos</button>
+          <button class="chip" data-cat="extras">+un / Extras</button>
+        </div>
+        <div class="pdv-product-grid" id="pdv-product-grid"></div>
+        <div class="cup-visual"><div class="cup"><div class="cup-liquid"></div></div></div>
+        <textarea id="pdv-obs" placeholder="Observações do item selecionado..." class="pill-input obs"></textarea>
+        <div class="btn-pair">
+          <button class="btn-gray" id="pdv-del">Del</button>
+          <button class="btn-confirm-green" id="pdv-add-item">Adicionar</button>
+        </div>
+      </div>
+
+      <!-- Coluna 2: Sacola / Lista -->
+      <div class="card">
+        <h2 class="card-title">Sacola</h2>
+        <div class="scroll-list bag-list" id="pdv-bag-list"></div>
+      </div>
+
+      <!-- Coluna 3: Comanda + pagamento -->
+      <div class="card card-dark">
+        <h2 class="card-title">Comanda</h2>
+        <div class="scroll-list comanda-list" id="pdv-comanda-list"></div>
+        <h3 class="card-subtitle">Valor</h3>
+        <div class="chip-row" id="pdv-payment">
+          <button class="chip pay-chip active" data-pay="Dinheiro">Dinheiro</button>
+          <button class="chip pay-chip" data-pay="Pix">Pix</button>
+          <button class="chip pay-chip" data-pay="Cartão">Cartão</button>
+        </div>
+        <div class="total-row">
+          <div class="total-pill" id="pdv-total">R$ 0,00</div>
+          <button class="btn-round-check" id="pdv-finalizar">✅</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== TELA 3: ESTOQUE ===== -->
+  <section class="screen" id="screen-estoque">
+    <div class="grid-2">
+      <div class="col-left">
+        <div class="card chart-card">
+          <div class="legend">
+            <span class="legend-dot blue"></span> Estoque ideal
+            <span class="legend-dot purple"></span> Estoque atual
+          </div>
+          <canvas id="estoque-chart" height="180"></canvas>
+        </div>
+        <div class="card">
+          <h2 class="card-title">Produto</h2>
+          <div class="chip-row" id="estoque-cat-toggle">
+            <button class="chip active" data-cat="Condimento">Condimentos</button>
+            <button class="chip" data-cat="Matéria-prima">Matéria-prima</button>
+            <button class="chip" data-cat="Unidade">Unidades</button>
+          </div>
+          <div class="scroll-list" id="estoque-list"></div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <h2 class="card-title">Meses</h2>
+          <div class="months-grid" id="estoque-months"></div>
+          <h2 class="card-title">Lista de compras</h2>
+          <div class="scroll-list" id="estoque-compras"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TELA 4: FINANCEIRO ===== -->
+  <section class="screen" id="screen-financeiro">
+    <div class="grid-2">
+      <div class="col-left">
+        <div class="card chart-card">
+          <div class="legend">
+            <span class="legend-dot blue"></span> Venda bruta
+            <span class="legend-dot purple"></span> Lucro líquido
+          </div>
+          <canvas id="fin-chart" height="180"></canvas>
+          <div class="kpi-row">
+            <div class="kpi"><span>Venda Bruta</span><b id="fin-bruta">R$ 0,00</b></div>
+            <div class="kpi"><span>Lucro Líquido</span><b id="fin-liquido">R$ 0,00</b></div>
+          </div>
+          <div class="chip-row" id="fin-period">
+            <button class="chip active" data-period="dia">Dia</button>
+            <button class="chip" data-period="semana">Semana</button>
+            <button class="chip" data-period="mes">Mês</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2 class="card-title">Vendas referente</h2>
+          <div class="chip-row" id="fin-size-toggle">
+            <button class="chip active" data-size="300ml">300ml</button>
+            <button class="chip" data-size="500ml">500ml</button>
+            <button class="chip" data-size="750ml">750ml</button>
+          </div>
+          <div class="size-summary" id="fin-size-summary"></div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <h2 class="card-title">Meses</h2>
+          <div class="months-grid" id="fin-months"></div>
+          <h2 class="card-title">Top Vendas</h2>
+          <div class="scroll-list" id="fin-top"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
